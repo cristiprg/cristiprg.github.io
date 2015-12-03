@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    
+    body {
+        background-image: url("resources/images/background.png");
+    }
+    
+    #movement-display{
+        background-color: cadetblue;
+        color: black;
+        font-size: 150px;
+
+
+        position:fixed;
+        top: 50%;
+        left: 50%;
+        width:30em;
+        height:18em;
+        margin-top: -9em; /*set to a negative number 1/2 of your height*/
+        margin-left: -15em; /*set to a negative number 1/2 of your width*/
+        border: 1px solid #ccc;
+    }
+
+    #movement-display .movement-canvas{
+        background-color: aqua;
+    }
+
+</style>
+<body>
+
+<div id="movement-display">
+</div>
+
+</body>
+<script src="d3.v2.js"> </script>
+<script>
+
+    var current_mouse_position = [0.0, 0.0];
+    var current_speed = 0, current_max_speed = 0;
+    var max_speed = 500000;
+    var iubi_text = "IUBI ";
+    var textData = [
+        {"x" : 120, "y" : 120, "opacity" :.5}
+    ];
+    var data = [];
+
+    var main_canvas = d3.select(".movement-canvas");
+    var svg = d3.select("#movement-display").append("svg")
+            .attr("width", "100%")
+            .attr("height", "90%")
+            .attr("class", "movement-canvas")
+            .on("mousemove", mousemove);
+
+
+    d3.select("#movement-display").append("div")
+            .attr("class", "speed")
+            .text(current_speed);
+
+    d3.select("#movement-display").append("div")
+            .attr("class", "max_speed")
+            .text(current_max_speed);
+
+
+    svg.selectAll("text")
+            .data(textData)
+            .enter()
+            .append("text")
+            //.attr("font-size", function(d) {return d.font-size})
+            .attr("x", function(d) {return d.x})
+            .attr("y", function(d) {return d.y})
+            .attr("opacity", function(d) {return d.opacity})
+            .text("IUBI DUBI");
+
+    d3.select("body").append("div")
+            .attr("class", "footer")
+            .text("bubi v0.00001");
+
+
+    function mousemove() {
+        var d = d3.mouse(this);
+
+        current_speed = distance(d, current_mouse_position);
+
+        if (current_speed > current_max_speed)
+            current_max_speed = current_speed;
+
+        score = current_speed / max_speed * 100;
+
+        d3.select("#movement-display .speed")
+                .text(JSON.stringify(current_speed));
+
+        d3.select("#movement-display .max_speed")
+                .text(JSON.stringify(current_max_speed));
+
+        d3.select(".movement-canvas").html("");
+        for (i = 0; i < score; i++){
+            //text += iubi_text.charAt(i % iubi_text.length);
+            d3.select(".movement-canvas").append("text")
+                    .attr("x", function(d) {return getRandomInt(0, 5000)})
+                    .attr("y", function(d) {return getRandomInt(0, 5000)})
+                    .attr("opacity", function(d) {return Math.random() + 0.5})
+                    .text("Iubi")
+
+        }
+
+        current_mouse_position = d;
+
+    }
+
+    function distance(pos1, pos2){
+        return Math.pow((pos1[0] - pos2[0]), 2) + Math.pow((pos1[1] - pos2[1]), 2);
+    }
+
+    /**
+     * Returns a random integer between min (inclusive) and max (inclusive)
+     * Using Math.round() will give you a non-uniform distribution!
+     */
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+</script>

@@ -39,7 +39,7 @@
     var current_mouse_position = [0.0, 0.0];
     var current_speed = 0, current_max_speed = 0;
     var max_speed = 500000;
-    var iubi_text = "IUBI ";
+    var iubi_text = ["Iubi", "Dubi", "Pico", "Pupi"];
     var textData = [
         {"x" : 120, "y" : 120, "opacity" :.5}
     ];
@@ -95,12 +95,13 @@
 
         d3.select(".movement-canvas").html("");
         for (i = 0; i < score; i++){
-            //text += iubi_text.charAt(i % iubi_text.length);
+
             d3.select(".movement-canvas").append("text")
                     .attr("x", function(d) {return getRandomInt(0, 5000)})
                     .attr("y", function(d) {return getRandomInt(0, 5000)})
+                    .attr("fill", '#'+(Math.random()*0xFFFFFF<<0).toString(16))
                     .attr("opacity", function(d) {return Math.random() + 0.5})
-                    .text("Iubi")
+                    .text(iubi_text[getRandomInt(0, iubi_text.length)]);
 
         }
 
